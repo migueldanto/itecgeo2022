@@ -1,0 +1,20 @@
+version: "3"
+
+services: 
+  itecgeo_site:
+    image: nginx
+    ports:
+      - "8083:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+    network_mode: "general6agostoproxy_traefik"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.itecgeo_site_https.redirectscheme.scheme=https"
+      - "traefik.http.routers.itecgeo_site.entrypoints=web"
+      - "traefik.http.routers.itecgeo_site.rule=Host(`itecgeo.com`)"
+      - "traefik.http.routers.itecgeo_site.middlewares=itecgeo_site_https@docker"
+      - "traefik.http.routers.itecgeo_site_https.rule=Host(`itecgeo.com`)"
+      - "traefik.http.routers.itecgeo_site_https.entrypoints=websecurity"
+      - "traefik.http.routers.itecgeo_site_https.tls.certresolver=myresolver"
+      - "traefik.http.routers.itecgeo_site_https.tls=true"
